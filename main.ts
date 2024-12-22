@@ -5,11 +5,13 @@ import { localization } from "localization";
 import { App, MarkdownView, Plugin, PluginSettingTab, Setting } from "obsidian";
 
 interface VimModeEscPluginSettings {
-	"hotkey": string;
+	hotkey: string;
+	developerMode: boolean;
 }
 
 const DEFAULT_SETTINGS: VimModeEscPluginSettings = {
-	"hotkey": "Esc"
+	hotkey: "<Esc>",
+	developerMode: true,
 };
 
 export default class VimModeEscPlugin extends Plugin {
@@ -22,9 +24,9 @@ export default class VimModeEscPlugin extends Plugin {
 			Prec.highest(
 				keymap.of([
 					{
-						key: "Esc",
+						key: "<Esc>",
 						run: (): boolean => {
-							this.log("Esc key event triggered");
+							console.log("Esc key event triggered");
 
 							const view = this.app.workspace.getActiveViewOfType(MarkdownView);
 							if (!view) {
@@ -34,8 +36,9 @@ export default class VimModeEscPlugin extends Plugin {
 
 							const editor = view.editor;
 
-							editor.replaceSelection("EscEsc");
-							this.log("Esc inserted");
+							editor.replaceSelection("<Esc>".repeat(2));
+							console.log("Esc inserted");
+							return true;
 						},
 						preventDefault: false, // always preventDefault?
 					},
